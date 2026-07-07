@@ -1,46 +1,239 @@
-<html lang="en-gb" class="no-js">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1"
-    />
-323333ユーザー閲覧時にブラウザ拡張などが挿入した想定外テキストの収集を防ぐ。auto_phrase_storage_disabled が true のサイトでは新規テキストの翻訳リクエストとRedisへの保存をスキップする。
-    <title>ATK_main</title>
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+    <meta charset="UTF-8">
+    <title>Chrome Extension Test Page</title>
 
-    <!-- shutto翻訳 導入タグ -->
+    <style>
+        body{
+            font-family: Arial;
+            margin:40px;
+            line-height:1.6;
+        }
+
+        .box{
+            border:1px solid #ddd;
+            padding:16px;
+            margin:20px 0;
+        }
+
+        .dynamic{
+            background:#f5f5f5;
+        }
+
+        button{
+            padding:8px 16px;
+            cursor:pointer;
+        }
+    </style>
     <script src="https://localhost:4566/trans.js?id=643"></script>
     <!-- <script src="https://dev-d.sc-shutto-translation.com/trans.js?id=1443"></script> -->
-  </head>
+</head>
 
-  <body>
-    <!--/.header-->
-    <div id="top"></div>
+<body>
 
-    <div class="flex-caption container">
-      <h3>2212312312Flat Design</h3>
-      <a href="#" class="btn btn-theme">Read More</a>
+<h1>Chrome Extension Test Website</h1>
+
+<p>
+323333ユーザー閲覧時にブラウザ拡張などが挿入した想定外テキストの収集を防ぐ。
+auto_phrase_storage_disabled が true のサイトでは
+新規テキストの翻訳リクエストとRedisへの保存をスキップする。
+</p>
+
+<div class="box">
+    <h3>Flat Design</h3>
+
+    <p>
+        ユーザー閲覧時にブラウザ拡張などが挿入した想定外テキストの収集を防ぐ。
+        auto_phrase_storage_disabled が true のサイトでは
+        新規テキストの翻訳リクエストとRedisへの保存をスキップする。
+    </p>
+
+    <button>Read More</button>
+</div>
+
+<div class="box">
+    <h3>Bootstrap</h3>
+
+    <p>
+        Counting objects: 100% (5/5), done.
+        Delta compression using up to 8 threads.
+        Writing objects: 100% (3/3), done.
+    </p>
+</div>
+
+<section class="box">
+    <h2>About Us</h2>
+
+    <p>
+        This website is used for testing Chrome Extension translation and
+        phrase collection.
+    </p>
+</section>
+
+<hr>
+
+<h2>Dynamic Content Demo</h2>
+
+<!-- ====================================================== -->
+<!-- Dynamic Type 1 -->
+<!-- ====================================================== -->
+
+<div class="box dynamic">
+
+    <h3>1. setTimeout()</h3>
+
+    <div id="dynamic-timeout">
+        Waiting...
     </div>
-ユーザー 閲覧時にブラウザ  拡張などが挿 入した想定外テキストの収集を  防ぐ。auto_phraad213se_storage_disabled が true のサ213 では新規テキストの翻 訳 リク エストと1 Redádisへの保存をスキップする。1212
-    <div class="col-md-3 text-center">
-      <div class="b1">
-        <h3>Bootstrap</h3>
+
+</div>
+
+<!-- ====================================================== -->
+<!-- Dynamic Type 2 -->
+<!-- ====================================================== -->
+
+<div class="box dynamic">
+
+    <h3>2. Fake API Response</h3>
+
+    <div id="dynamic-api">
+        Loading...
+    </div>
+
+</div>
+
+<!-- ====================================================== -->
+<!-- Dynamic Type 3 -->
+<!-- ====================================================== -->
+
+<div class="box dynamic">
+
+    <h3>3. Click to Append</h3>
+
+    <button id="appendBtn">
+        Append Dynamic Text
+    </button>
+
+    <div id="appendArea"></div>
+
+</div>
+
+<!-- ====================================================== -->
+<!-- Dynamic Type 4 -->
+<!-- ====================================================== -->
+
+<div class="box dynamic">
+
+    <h3>4. MutationObserver Target</h3>
+
+    <div id="observerTarget">
+        Initial Content
+    </div>
+
+</div>
+
+<script>
+
+//
+// Dynamic Type 1
+//
+setTimeout(() => {
+
+    document.getElementById("dynamic-timeout").innerHTML = `
         <p>
-          Counting objects: 100% (5/5), done. Delta compression using up to 8
-          threads Compressing objects: 100% (2/2), done. Writing objects: 100%
-          (3/3), 286 bytes | 286.00 KiB/s, done. Total 3 (delta 1), reused 0
-          (delta 0), pack-reused 0 remote: Resolving deltas: 100% (1/1),
-          completed with 1 local object.
-        </p>
-      </div>
-    </div>
+            【Dynamic Timeout】
 
-    <section id="aboutUs">
-      <div class="container">
-        <div class="heading text-center">
-          <h2>About Us</h2>
-        </div>
-      </div>
-    </section>
-  </body>
+            auto_phrase_storage_disabled = true
+
+            このテキストは
+            setTimeout() によって後から生成されました。
+
+            Redisへの保存をスキップする。
+
+            Chrome Extension should detect this text.
+        </p>
+    `;
+
+}, 2000);
+
+
+//
+// Dynamic Type 2
+//
+function fakeApi(){
+
+    return new Promise(resolve=>{
+
+        setTimeout(()=>{
+
+            resolve({
+                title:"API Result",
+                body:"API returned dynamic content. 新規テキストの翻訳リクエストをスキップします。"
+            });
+
+        },3000);
+
+    });
+
+}
+
+fakeApi().then(data=>{
+
+    document.getElementById("dynamic-api").innerHTML = `
+        <h4>${data.title}</h4>
+
+        <p>${data.body}</p>
+
+        <p>
+            Đây là nội dung được render sau khi API trả về.
+        </p>
+    `;
+
+});
+
+
+//
+// Dynamic Type 3
+//
+document
+.getElementById("appendBtn")
+.addEventListener("click",()=>{
+
+    const p=document.createElement("p");
+
+    p.innerText=`
+Click generated content.
+
+ユーザー閲覧時にブラウザ拡張などが挿入した想定外テキスト。
+
+This paragraph is appended dynamically.
+
+Redis Cache
+Translation Request
+Chrome Extension
+`;
+
+    document
+        .getElementById("appendArea")
+        .appendChild(p);
+
+});
+
+
+//
+// Dynamic Type 4
+//
+const target=document.getElementById("observerTarget");
+
+setTimeout(()=>{
+
+    target.textContent=
+        "MutationObserver detected. auto_phrase_storage_disabled=false. Dynamic DOM updated.";
+
+},5000);
+
+</script>
+
+</body>
 </html>
