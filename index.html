@@ -26,10 +26,98 @@
             cursor:pointer;
         }
     </style>
-    <script src="http://localhost:4566/shutto-translation-development3/trans.js?id=643"></script>
-    <!-- <script src="https://dev-d.sc-shutto-translation.com/trans.js?id=1443"></script> -->
-    <!-- <script src="https://localhost:4566/trans.js?id=643"></script> -->
-    <!-- <script src="https://dev-d.sc-shutto-translation.com/trans.js?id=1443"></script> -->
+    <script src="http://localhost:4566/shutto-translation-development3/trans.js?id=643">
+
+// Extra Random Dynamic Content
+const randomTexts=[
+"Hello World","こんにちは","Xin chào","你好","안녕하세요","Bonjour","Hola",
+"Redis Cache","Chrome Extension","新規テキスト","Lorem ipsum","Привет","مرحبا"
+];
+function randomWord(n=10){const c="abcdefghijklmnopqrstuvwxyz";let s="";for(let i=0;i<n;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
+function appendRandom(){
+ const tags=["p","div","article","section","blockquote","span"];
+ const el=document.createElement(tags[Math.floor(Math.random()*tags.length)]);
+ el.innerHTML=`<h4>${randomWord(8)}</h4>
+ <p>${randomTexts[Math.floor(Math.random()*randomTexts.length)]}</p>
+ <p>UUID: ${crypto.randomUUID()}</p>
+ <p>Word: ${randomWord(12)}</p>
+ <p>Time: ${new Date().toLocaleString()}</p>`;
+ document.getElementById("appendArea").appendChild(el);
+}
+document.getElementById("appendBtn").addEventListener("dblclick",appendRandom);
+document.getElementById("append100Btn").addEventListener("click",()=>{for(let i=0;i<100;i++)appendRandom();});
+document.getElementById("clearBtn").addEventListener("click",()=>document.getElementById("appendArea").innerHTML="");
+
+</script>
+    <!-- <script src="https://dev-d.sc-shutto-translation.com/trans.js?id=1443">
+
+// Extra Random Dynamic Content
+const randomTexts=[
+"Hello World","こんにちは","Xin chào","你好","안녕하세요","Bonjour","Hola",
+"Redis Cache","Chrome Extension","新規テキスト","Lorem ipsum","Привет","مرحبا"
+];
+function randomWord(n=10){const c="abcdefghijklmnopqrstuvwxyz";let s="";for(let i=0;i<n;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
+function appendRandom(){
+ const tags=["p","div","article","section","blockquote","span"];
+ const el=document.createElement(tags[Math.floor(Math.random()*tags.length)]);
+ el.innerHTML=`<h4>${randomWord(8)}</h4>
+ <p>${randomTexts[Math.floor(Math.random()*randomTexts.length)]}</p>
+ <p>UUID: ${crypto.randomUUID()}</p>
+ <p>Word: ${randomWord(12)}</p>
+ <p>Time: ${new Date().toLocaleString()}</p>`;
+ document.getElementById("appendArea").appendChild(el);
+}
+document.getElementById("appendBtn").addEventListener("dblclick",appendRandom);
+document.getElementById("append100Btn").addEventListener("click",()=>{for(let i=0;i<100;i++)appendRandom();});
+document.getElementById("clearBtn").addEventListener("click",()=>document.getElementById("appendArea").innerHTML="");
+
+</script> -->
+    <!-- <script src="https://localhost:4566/trans.js?id=643">
+
+// Extra Random Dynamic Content
+const randomTexts=[
+"Hello World","こんにちは","Xin chào","你好","안녕하세요","Bonjour","Hola",
+"Redis Cache","Chrome Extension","新規テキスト","Lorem ipsum","Привет","مرحبا"
+];
+function randomWord(n=10){const c="abcdefghijklmnopqrstuvwxyz";let s="";for(let i=0;i<n;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
+function appendRandom(){
+ const tags=["p","div","article","section","blockquote","span"];
+ const el=document.createElement(tags[Math.floor(Math.random()*tags.length)]);
+ el.innerHTML=`<h4>${randomWord(8)}</h4>
+ <p>${randomTexts[Math.floor(Math.random()*randomTexts.length)]}</p>
+ <p>UUID: ${crypto.randomUUID()}</p>
+ <p>Word: ${randomWord(12)}</p>
+ <p>Time: ${new Date().toLocaleString()}</p>`;
+ document.getElementById("appendArea").appendChild(el);
+}
+document.getElementById("appendBtn").addEventListener("dblclick",appendRandom);
+document.getElementById("append100Btn").addEventListener("click",()=>{for(let i=0;i<100;i++)appendRandom();});
+document.getElementById("clearBtn").addEventListener("click",()=>document.getElementById("appendArea").innerHTML="");
+
+</script> -->
+    <!-- <script src="https://dev-d.sc-shutto-translation.com/trans.js?id=1443">
+
+// Extra Random Dynamic Content
+const randomTexts=[
+"Hello World","こんにちは","Xin chào","你好","안녕하세요","Bonjour","Hola",
+"Redis Cache","Chrome Extension","新規テキスト","Lorem ipsum","Привет","مرحبا"
+];
+function randomWord(n=10){const c="abcdefghijklmnopqrstuvwxyz";let s="";for(let i=0;i<n;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
+function appendRandom(){
+ const tags=["p","div","article","section","blockquote","span"];
+ const el=document.createElement(tags[Math.floor(Math.random()*tags.length)]);
+ el.innerHTML=`<h4>${randomWord(8)}</h4>
+ <p>${randomTexts[Math.floor(Math.random()*randomTexts.length)]}</p>
+ <p>UUID: ${crypto.randomUUID()}</p>
+ <p>Word: ${randomWord(12)}</p>
+ <p>Time: ${new Date().toLocaleString()}</p>`;
+ document.getElementById("appendArea").appendChild(el);
+}
+document.getElementById("appendBtn").addEventListener("dblclick",appendRandom);
+document.getElementById("append100Btn").addEventListener("click",()=>{for(let i=0;i<100;i++)appendRandom();});
+document.getElementById("clearBtn").addEventListener("click",()=>document.getElementById("appendArea").innerHTML="");
+
+</script> -->
 </head>
 
 <body>
@@ -167,6 +255,10 @@ Fake Data Generator</h3>
 
     <div id="appendArea"></div>
 
+<button id="append100Btn">Append 100 Random</button>
+<button id="clearBtn">Clear</button>
+
+
 </div>
 
 <!-- ====================================================== -->
@@ -282,6 +374,28 @@ setTimeout(()=>{
         "MutationObserver detected. auto_phrase_storage_disabled=false. Dynamic DOM updated.";
 
 },5000);
+
+
+
+// Extra Random Dynamic Content
+const randomTexts=[
+"Hello World","こんにちは","Xin chào","你好","안녕하세요","Bonjour","Hola",
+"Redis Cache","Chrome Extension","新規テキスト","Lorem ipsum","Привет","مرحبا"
+];
+function randomWord(n=10){const c="abcdefghijklmnopqrstuvwxyz";let s="";for(let i=0;i<n;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
+function appendRandom(){
+ const tags=["p","div","article","section","blockquote","span"];
+ const el=document.createElement(tags[Math.floor(Math.random()*tags.length)]);
+ el.innerHTML=`<h4>${randomWord(8)}</h4>
+ <p>${randomTexts[Math.floor(Math.random()*randomTexts.length)]}</p>
+ <p>UUID: ${crypto.randomUUID()}</p>
+ <p>Word: ${randomWord(12)}</p>
+ <p>Time: ${new Date().toLocaleString()}</p>`;
+ document.getElementById("appendArea").appendChild(el);
+}
+document.getElementById("appendBtn").addEventListener("dblclick",appendRandom);
+document.getElementById("append100Btn").addEventListener("click",()=>{for(let i=0;i<100;i++)appendRandom();});
+document.getElementById("clearBtn").addEventListener("click",()=>document.getElementById("appendArea").innerHTML="");
 
 </script>
 
