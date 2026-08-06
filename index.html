@@ -46,6 +46,11 @@
     }
 
     .toolbar-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .toolbar-text-input {
+      min-width: 200px; flex: 1 1 240px; background: var(--bg-card); color: var(--text-main);
+      border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; font: inherit;
+    }
+    .toolbar-text-input:focus { outline: 2px solid rgba(56, 189, 248, 0.5); outline-offset: 1px; }
     .btn {
       background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color);
       padding: 8px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
@@ -113,6 +118,8 @@
     <div class="toolbar-actions">
       <button class="btn sidebar-toggle" onclick="toggleSidebar(true)">☰ Pages</button>
       <button class="btn btn-emerald" onclick="appendParagraph()">+ Add Paragraph</button>
+      <input id="add-text-input" class="toolbar-text-input" type="text" placeholder="Enter text to add" aria-label="Text to add" onkeydown="if (event.key === 'Enter') appendInputText()">
+      <button class="btn btn-emerald" onclick="appendInputText()">+ Add Text</button>
       <button class="btn btn-purple" onclick="appendHeading()">+ Add Heading</button>
       <button class="btn btn-blue" onclick="appendRandomTags()">+ Add 100 Random Tags</button>
       <button class="btn btn-blue" onclick="goToRandomPage()">🎲 Random Page</button>
@@ -177,6 +184,18 @@
         const p = document.createElement('p');
         p.textContent = generateParagraph(null, 200);
         container.appendChild(p);
+        updateCharCounterUI();
+      };
+
+      window.appendInputText = function() {
+        const container = document.getElementById('content-box');
+        const input = document.getElementById('add-text-input');
+        if (!container || !input || !input.value.trim()) return;
+
+        const p = document.createElement('p');
+        p.textContent = input.value;
+        container.appendChild(p);
+        input.value = '';
         updateCharCounterUI();
       };
 
