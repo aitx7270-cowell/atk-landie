@@ -355,7 +355,7 @@
       function changeImageSrc() {
         const img = document.getElementById('img-a');
         const stamp = Date.now();
-        img.setAttribute('src', 'https://via.placeholder.com/80x40?text=S' + (stamp % 1000));
+        img.setAttribute('src', 'https://placehold.co/80x40?text=S' + (stamp % 1000));
         log('Changed image src (for dom-observer attributes path).');
       }
 
