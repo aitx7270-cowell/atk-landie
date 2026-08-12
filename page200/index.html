@@ -244,10 +244,20 @@
     <div id="event-log"></div>
   </div>
 
+  <div class="card">
+    <h2>G. Initial 4-batch load test (&gt;900 p tags)</h2>
+    <p>
+      This block auto-generates 1200 simple random paragraphs at page load.
+      With chunk size 300, initial collection should be split into 4 batches.
+    </p>
+    <div id="bulk-paragraph-zone"></div>
+  </div>
+
   <script>
     (function () {
       const logEl = document.getElementById('event-log');
       const dynamicZone = document.getElementById('dynamic-zone');
+      const bulkParagraphZone = document.getElementById('bulk-paragraph-zone');
 
       function log(msg) {
         const line = '[' + new Date().toLocaleTimeString() + '] ' + msg;
@@ -354,6 +364,23 @@
         log('Cleared dynamic zone.');
       }
 
+      function randomWord() {
+        const words = ['alpha', 'beta', 'gamma', 'delta', 'cloud', 'river', 'stone', 'light', 'wind', 'tree'];
+        return words[Math.floor(Math.random() * words.length)];
+      }
+
+      function seedBulkParagraphs(total) {
+        const frag = document.createDocumentFragment();
+
+        for (let i = 1; i <= total; i += 1) {
+          const p = document.createElement('p');
+          p.textContent = 'Bulk phrase #' + i + ' - ' + randomWord() + ' ' + randomWord() + ' ' + randomWord() + ' ' + Date.now();
+          frag.appendChild(p);
+        }
+
+        bulkParagraphZone.appendChild(frag);
+      }
+
       document.getElementById('btn-add-childlist').addEventListener('click', addChildListNodes);
       document.getElementById('btn-add-grouped-childlist').addEventListener('click', addGroupedChildListWithIgnoreBoundary);
       document.getElementById('btn-change-char').addEventListener('click', changeCharacterData);
@@ -374,6 +401,9 @@
         checks.forEach(function (check) { check.checked = false; });
         log('QA checklist: reset all checkboxes.');
       });
+
+      seedBulkParagraphs(1200);
+      log('Generated 1200 initial random <p> tags for 4-batch initial collection test.');
 
       log('index2.html loaded. Ready for initial + dynamic collection tests.');
     })();
