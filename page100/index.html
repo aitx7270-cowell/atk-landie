@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SPA Route Watch test - Page 100</title>
   <script src="https://localhost:4566/shutto-translation-development3/trans.js?id=70"></script>
-  <!-- Chrome Extension が導入タグを検出するためのテスト用タグ -->
-  <script data-stt-id="spa-route-watch-test"></script>
   <style>
     :root {
       color: #182235;
@@ -62,50 +60,35 @@
 
     <section class="status" data-stt-ignore>
       <div>URL hiện tại: <code id="current-url"></code></div>
-      <div>Page ID giả lập: <code id="current-page-id"></code></div>
-      <div>Trạng thái fake 導入タグ: <code id="tag-status"></code></div>
+      <div>Page ID từ `stt-info`: <code id="current-page-id"></code></div>
+      <div>Trạng thái 導入タグ: <code id="tag-status"></code></div>
     </section>
   </main>
 
   <script>
     ;(() => {
-      function currentPageId () {
-        return window.location.pathname.endsWith('/page200') ? '200' : '100'
-      }
-
-      function tagContent () {
-        return `state=match;siteId=83613;pageId=${currentPageId()}`
-      }
-
-      function addSttInfo () {
-        let meta = document.querySelector('meta[name="stt-info"]')
-        if (!meta) {
-          meta = document.createElement('meta')
-          meta.name = 'stt-info'
-          document.head.appendChild(meta)
-        }
-        meta.content = tagContent()
-      }
-
-      function removeSttInfo () {
+      function getSttInfo () {
         const meta = document.querySelector('meta[name="stt-info"]')
-        if (meta) meta.remove()
+        if (!meta) return {}
+        return (meta.content || '').split(';').reduce((status, pair) => {
+          const [key, value] = pair.split('=')
+          if (key && value) status[key] = value
+          return status
+        }, {})
       }
 
       function render () {
-        const pageId = currentPageId()
+        const sttInfo = getSttInfo()
+        const pathPage = window.location.pathname.endsWith('/page200') ? '200' : '100'
         document.querySelector('#current-url').textContent = window.location.href
-        document.querySelector('#current-page-id').textContent = pageId
-        document.querySelector('#tag-status').textContent = document.querySelector('meta[name="stt-info"]')
-          ? 'running'
-          : 'stopped'
-        document.querySelector('#page-title').textContent = `SPA Route Watch test: Page ${pageId}`
-        document.querySelector('#page-text').textContent = `Đây là nội dung được render bởi SPA của Page ${pageId}.`
+        document.querySelector('#current-page-id').textContent = sttInfo.pageId || '(không có)'
+        document.querySelector('#tag-status').textContent = sttInfo.state || 'stopped'
+        document.querySelector('#page-title').textContent = `SPA Route Watch test: Page ${pathPage}`
+        document.querySelector('#page-text').textContent = `Đây là nội dung được render bởi SPA của Page ${pathPage}.`
       }
 
       function updateUrl (url) {
         window.history.pushState({}, '', url)
-        if (document.querySelector('meta[name="stt-info"]')) addSttInfo()
         render()
       }
 
@@ -121,16 +104,13 @@
         updateUrl('/atk-landie/page200')
       })
 
-      // Manual Collection の init / destroy を再現する最小限のテスト用ブリッジ。
-      window.addEventListener('message', (event) => {
-        if (event.origin !== window.location.origin || !event.data) return
-        if (event.data.type === 'destroy') removeSttInfo()
-        if (event.data.type === 'init') addSttInfo()
-        render()
-      })
-
       window.addEventListener('popstate', render)
-      addSttInfo()
+      new MutationObserver(render).observe(document.head, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['content']
+      })
       render()
     })()
   </script>
