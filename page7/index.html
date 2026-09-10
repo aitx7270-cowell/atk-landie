@@ -166,12 +166,12 @@
           <button class="btn btn-purple" onclick="setSpaHash('activity')">Hash: #activity</button>
           <button class="btn btn-emerald" onclick="setSpaProduct('1')">SPA Product: id=1</button>
           <button class="btn btn-emerald" onclick="setSpaProduct('2')">SPA Product: id=2</button>
-          <button class="btn btn-emerald" onclick="setPageId('111111')">pageId: 111111 (same)</button>
+          <button class="btn btn-emerald" onclick="setPageId('85')">pageId: 85 (same)</button>
           <button class="btn btn-danger" onclick="setPageId('222222')">pageId: 222222 (different)</button>
           <button class="btn btn-amber" onclick="removePageIdMeta()">Remove stt-info (temporary)</button>
-          <button class="btn btn-emerald" onclick="restorePageId('111111')">Restore same pageId</button>
+          <button class="btn btn-emerald" onclick="restorePageId('85')">Restore same pageId</button>
           <button class="btn btn-danger" onclick="restorePageId('333333')">Restore different pageId</button>
-          <button class="btn btn-emerald" onclick="recreatePageId('111111')">SPA: remove → add same pageId</button>
+          <button class="btn btn-emerald" onclick="recreatePageId('85')">SPA: remove → add same pageId</button>
           <button class="btn btn-danger" onclick="recreatePageId('333333')">SPA: remove → add different pageId</button>
           <button class="btn btn-amber" onclick="setSpaPath('/atk-landie/page2')">SPA Path: /atk-landie/page2</button>
           <button class="btn btn-danger" onclick="navigateDocument()">Document Navigation</button>
@@ -387,7 +387,7 @@
         newMeta.name = 'stt-info';
         newMeta.content = 'state=match;siteId=83613;pageId=' + pageId;
         document.head.appendChild(newMeta);
-        updateSpaView('SPA recreated stt-info with pageId=' + pageId + ' → expected: ' + (pageId === '111111' ? 'continue' : 'stop collection'));
+        updateSpaView('SPA recreated stt-info with pageId=' + pageId + ' → expected: ' + (pageId === '85' ? 'continue' : 'stop collection'));
       };
 
       window.setSpaPath = function(pathname) {
