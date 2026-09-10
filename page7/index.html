@@ -72,6 +72,9 @@
     .route-state { display: grid; grid-template-columns: 150px 1fr; gap: 6px 12px; margin-top: 16px; font-size: 0.86rem; }
     .route-state dt { color: var(--text-muted); }
     .route-state dd { margin: 0; color: #e2e8f0; overflow-wrap: anywhere; }
+    .test-matrix { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.86rem; }
+    .test-matrix th, .test-matrix td { border: 1px solid var(--border-color); padding: 8px 10px; text-align: left; }
+    .test-matrix th { color: var(--accent-blue); background: rgba(56, 189, 248, 0.08); }
     .spa-page { border-top: 1px solid var(--border-color); padding-top: 16px; }
 
     .page-sidebar {
@@ -109,6 +112,7 @@
       .container { margin-left: max(244px, calc((100vw - 900px) / 2)); margin-right: 30px; }
     }
   </style>
+  <meta name="stt-info" content="state=match;siteId=83613;pageId=111111">
   <script src="https://localhost:4566/shutto-translation-development3/trans.js?id=70"></script>
 </head>
 <body>
@@ -142,7 +146,20 @@
     <div class="content-box" id="content-box">
       <section class="spa-lab">
         <h2>SPA Route Test Lab</h2>
-        <p>Cac nut SPA dung History API, chi doi URL va render noi dung mo phong trong document Page 7. Nut document navigation dung location.assign de tai trang dich that va kiem thu luong roi trang cua browser.</p>
+        <p>Trang này dùng để kiểm thử Route Watch của Manual Collection. Mỗi nút hiển thị rõ input và output kỳ vọng. Query/hash chỉ cập nhật UI; pathname hoặc pageId khác phải làm dừng collection.</p>
+        <table class="test-matrix" aria-label="Expected Route Watch results">
+          <thead><tr><th>Input</th><th>Output kỳ vọng</th></tr></thead>
+          <tbody>
+            <tr><td>Query/hash thay đổi</td><td>Tiếp tục collection</td></tr>
+            <tr><td>pageId giữ nguyên</td><td>Tiếp tục collection</td></tr>
+            <tr><td>pageId thay đổi</td><td>Dừng collection</td></tr>
+            <tr><td>stt-info bị xóa tạm thời</td><td>Tiếp tục collection</td></tr>
+            <tr><td>stt-info quay lại với pageId khác</td><td>Dừng collection</td></tr>
+            <tr><td>SPA xóa rồi tạo lại stt-info với pageId giống</td><td>Tiếp tục collection</td></tr>
+            <tr><td>SPA xóa rồi tạo lại stt-info với pageId khác</td><td>Dừng collection</td></tr>
+            <tr><td>pathname thay đổi</td><td>Dừng collection</td></tr>
+          </tbody>
+        </table>
         <div class="spa-actions">
           <button class="btn btn-blue" onclick="setSpaQueryTab('overview')">Query: tab=overview</button>
           <button class="btn btn-blue" onclick="setSpaQueryTab('details')">Query: tab=details</button>
@@ -150,12 +167,20 @@
           <button class="btn btn-purple" onclick="setSpaHash('activity')">Hash: #activity</button>
           <button class="btn btn-emerald" onclick="setSpaProduct('1')">SPA Product: id=1</button>
           <button class="btn btn-emerald" onclick="setSpaProduct('2')">SPA Product: id=2</button>
+          <button class="btn btn-emerald" onclick="setPageId('111111')">pageId: 111111 (same)</button>
+          <button class="btn btn-danger" onclick="setPageId('222222')">pageId: 222222 (different)</button>
+          <button class="btn btn-amber" onclick="removePageIdMeta()">Remove stt-info (temporary)</button>
+          <button class="btn btn-emerald" onclick="restorePageId('111111')">Restore same pageId</button>
+          <button class="btn btn-danger" onclick="restorePageId('333333')">Restore different pageId</button>
+          <button class="btn btn-emerald" onclick="recreatePageId('111111')">SPA: remove → add same pageId</button>
+          <button class="btn btn-danger" onclick="recreatePageId('333333')">SPA: remove → add different pageId</button>
           <button class="btn btn-amber" onclick="setSpaPath('/atk-landie/page2')">SPA Path: /atk-landie/page2</button>
           <button class="btn btn-danger" onclick="navigateDocument()">Document Navigation</button>
         </div>
         <dl class="route-state">
           <dt>URL hien tai</dt><dd id="spa-current-url"></dd>
           <dt>SPA logical page</dt><dd id="spa-logical-page"></dd>
+          <dt>stt-info pageId</dt><dd id="spa-page-id"></dd>
           <dt>Last action</dt><dd id="spa-last-action">Initial render</dd>
         </dl>
         <div class="spa-page" id="spa-page-content"></div>
@@ -286,6 +311,7 @@
         const logicalPage = 'Product ' + productId + ' | tab=' + tab + ' | hash=' + (window.location.hash || 'none');
         document.querySelector('#spa-current-url').textContent = window.location.href;
         document.querySelector('#spa-logical-page').textContent = logicalPage;
+        document.querySelector('#spa-page-id').textContent = getPageId() || '(not available)';
         document.querySelector('#spa-last-action').textContent = action || 'History navigation';
         document.querySelector('#spa-page-content').textContent = 'SPA rendered content for ' + logicalPage + '. This text is inserted after the route changes.';
         updateCharCounterUI();
@@ -312,6 +338,57 @@
         const url = new URL(window.location.href);
         url.searchParams.set('id', id);
         pushSpaUrl(url.pathname + url.search + url.hash, 'SPA logical page change: product id=' + id);
+      };
+
+      function getSttInfoMeta() {
+        return document.querySelector('meta[name="stt-info"]');
+      }
+
+      function getPageId() {
+        const meta = getSttInfoMeta();
+        const match = meta && (meta.getAttribute('content') || '').match(/(?:^|;)\s*pageId\s*=\s*([^;]*)/);
+        return match ? match[1].trim() : '';
+      }
+
+      function ensureSttInfoMeta() {
+        let meta = getSttInfoMeta();
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.name = 'stt-info';
+          document.head.appendChild(meta);
+        }
+        return meta;
+      }
+
+      window.setPageId = function(pageId) {
+        const meta = ensureSttInfoMeta();
+        const content = meta.getAttribute('content') || 'state=match;siteId=83613';
+        const withoutPageId = content.replace(/(?:^|;)\s*pageId\s*=\s*[^;]*/g, '').replace(/^;|;;/g, '');
+        meta.setAttribute('content', withoutPageId + ';pageId=' + pageId);
+        updateSpaView('pageId changed: ' + pageId + ' → expected: stop collection');
+      };
+
+      window.removePageIdMeta = function() {
+        const meta = getSttInfoMeta();
+        if (meta) meta.remove();
+        updateSpaView('stt-info removed temporarily → expected: continue collection');
+      };
+
+      window.restorePageId = function(pageId) {
+        const meta = ensureSttInfoMeta();
+        meta.setAttribute('content', 'state=match;siteId=83613;pageId=' + pageId);
+        updateSpaView('stt-info restored with pageId=' + pageId);
+      };
+
+      // Mô phỏng SPA thay đổi meta mà không reload document.
+      window.recreatePageId = function(pageId) {
+        const currentMeta = getSttInfoMeta();
+        if (currentMeta) currentMeta.remove();
+        const newMeta = document.createElement('meta');
+        newMeta.name = 'stt-info';
+        newMeta.content = 'state=match;siteId=83613;pageId=' + pageId;
+        document.head.appendChild(newMeta);
+        updateSpaView('SPA recreated stt-info with pageId=' + pageId + ' → expected: ' + (pageId === '111111' ? 'continue' : 'stop collection'));
       };
 
       window.setSpaPath = function(pathname) {
