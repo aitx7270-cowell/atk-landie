@@ -108,6 +108,8 @@
   <div class="sidebar-backdrop" onclick="toggleSidebar(false)" aria-hidden="true"></div>
   <header class="sticky-toolbar">
     <div class="toolbar-brand">
+      Rule max page: MAX_PAGE_SIZE × 20 = 30.000 × 20 = 600.000 kí tự
+      => cần > 600.000 kí tự để vượt giới hạn
       <span>Multilingual Generator</span>
       <span class="toolbar-badge">Page 9 / 200</span>
     </div>
@@ -175,6 +177,19 @@
           const count = container.textContent ? container.textContent.trim().length : 0;
           counterEl.textContent = count.toLocaleString() + ' chars';
         }
+      }
+
+      // Keep this page above MAX_PAGE_SIZE * 20 so the extension Big Page error can be tested.
+      function appendMaxPageFixture() {
+        const targetSize = 610000;
+        const fixture = document.createElement('div');
+        const seed = 'Big Page collection limit test content. ';
+        fixture.id = 'max-page-test-fixture';
+        fixture.dataset.sttIgnore = '';
+        fixture.setAttribute('aria-hidden', 'true');
+        fixture.style.cssText = 'position:absolute;left:-100000px;width:1px;height:1px;overflow:hidden;';
+        fixture.textContent = seed.repeat(Math.ceil(targetSize / seed.length)).slice(0, targetSize);
+        document.body.appendChild(fixture);
       }
 
       window.appendParagraph = function() {
@@ -267,6 +282,7 @@
 
       document.addEventListener('DOMContentLoaded', function() {
         renderPageNavigation();
+        appendMaxPageFixture();
         updateCharCounterUI();
       });
     })();
