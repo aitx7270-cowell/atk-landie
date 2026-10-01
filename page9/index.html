@@ -181,12 +181,12 @@
 
       // Keep this page above MAX_PAGE_SIZE * 20 so the extension Big Page error can be tested.
       function appendMaxPageFixture() {
-        const targetSize = 610000;
+        const targetSize = 110000;
         const fixture = document.createElement('div');
         const seed = 'Big Page collection limit test content. ';
         fixture.id = 'max-page-test-fixture';
-        fixture.dataset.sttIgnore = '';
-        fixture.setAttribute('aria-hidden', 'true');
+        // Keep the fixture in the translatable text size calculation so this page
+        // reliably triggers the BigPage threshold during manual collection tests.
         fixture.style.cssText = 'position:absolute;left:-100000px;width:1px;height:1px;overflow:hidden;';
         fixture.textContent = seed.repeat(Math.ceil(targetSize / seed.length)).slice(0, targetSize);
         document.body.appendChild(fixture);
